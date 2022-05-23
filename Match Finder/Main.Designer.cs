@@ -144,7 +144,6 @@
             this.playersTextBox.Name = "playersTextBox";
             this.playersTextBox.Size = new System.Drawing.Size(192, 20);
             this.playersTextBox.TabIndex = 39;
-            this.playersTextBox.Text = "4830687,11684622";
             // 
             // roomNameTextBox
             // 
@@ -171,7 +170,7 @@
             this.startFromRoomIdNumeric.TabIndex = 41;
             this.startFromRoomIdNumeric.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.startFromRoomIdNumeric.Value = new decimal(new int[] {
-            99619644,
+            100000000,
             0,
             0,
             0});

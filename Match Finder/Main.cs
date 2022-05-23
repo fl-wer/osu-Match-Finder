@@ -31,12 +31,33 @@ namespace Match_Finder
         // how many matches checked in one search
         int checkedMatches = 0;
 
+        // information file names, these are files that store all
+        // kind of information and are saved in software default folder in variable below
+        // all those files will have "INF" at the end so you know these
+        public static string lastMpINF = "lastMp";
+
+        // path where all INF files are stored
+        string configFilesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) +
+            "\\fl-wer\\Match Finder\\";
+
         // ran when loading form
         private void Main_Load(object sender, EventArgs e)
         {
             // changing some settings for the program
             webQueue1.WorkerSupportsCancellation = true;
             CheckForIllegalCrossThreadCalls = false;
+
+            // if software folder doesn't exist = make it
+            if (!Directory.Exists(configFilesPath))
+                Directory.CreateDirectory(configFilesPath);
+
+            // read last mp link and apply to form if exists
+            if (File.Exists(configFilesPath + lastMpINF))
+            {
+                int mpLink = 0;
+                if (int.TryParse(File.ReadAllText(configFilesPath + lastMpINF), out mpLink))
+                    startFromRoomIdNumeric.Value = mpLink;
+            }
 
             // apply default dropdown settings
             playersDropdown.SelectedIndex = 0;
@@ -57,6 +78,10 @@ namespace Match_Finder
                 {
                     // cleaning checked matches counter
                     checkedMatches = 0;
+
+                    // save last used mp link, adding blank string as without it
+                    // windows dumb defender thinks it's bitcoin miner rofl
+                    File.WriteAllText(Path.Combine(configFilesPath, lastMpINF), startFromRoomIdNumeric.Value + "");
 
                     // running queue
                     webQueue1.RunWorkerAsync();
@@ -106,8 +131,8 @@ namespace Match_Finder
             // read room name filter
             // equals means room name has to be exactly like in the box
             // contains means the room name has to contain the text in the box
-            if (roomNameDropdown.SelectedIndex == 0) playersFilter = "Equals";
-            else playersFilter = "Contains";
+            if (roomNameDropdown.SelectedIndex == 0) roomNameFilter = "Equals";
+            else roomNameFilter = "Contains";
 
             // decide if information is correct and usable for search
             if (formApiKey != "" && (formPlayers.Length != 0 || formRoomName != "")) return "";
